@@ -1,66 +1,104 @@
 namespace hrms.system;
 
 using {cuid} from '@sap/cds/common';
+using {reusable.validations as types} from './reusableTypesAndValidations';
 
 
+@assert.unique: {
+  email        : [email],
+  contactNumber: [contactNumber]
+}
 entity Employee : cuid {
-  FirstName        : String(20);
-  LastName         : String(20);
-  DateOfBirth      : Date;
-  Gender           : String enum {
+  firstName        : String(20);
+  lastName         : String(20);
+  dateOfBirth      : Date;
+  gender           : String enum {
     Male;
     Female;
     Others
   };
-  ContactNumber    : String;
-  Email            : String;
-  UAN              : String;
-  AAdhar           : String;
+  contactNumber    : types.phone;
+  email            : types.email;
+  UAN              : Integer;
+  AAdhar           : Integer;
   PAN              : String;
-  EmergencyContact : String;
+  emergencyContact : String;
+  address          : Composition of many Address
+                       on address.employee = $self;
+  department       : Association to Department;
+  position         : Association to Position;
+  leaveRequest     : Composition of many LeaveRequest
+                       on leaveRequest.employee = $self;
+  attendance       : Composition of many Attendance
+                       on attendance.employee = $self;
+  payroll          : Composition of many Payroll
+                       on payroll.employee = $self;
+  bankDetail       : Composition of many Bankdetails
+                       on bankDetail.employee = $self;
+  resignDetails    : Composition of Resignation;
+  document         : Composition of many Document
+                       on document.employee = $self;
+}
+
+entity Address : cuid {
+  Street   : String;
+  City     : String;
+  Pincode  : Integer;
+  Address  : String;
+  employee : Association to Employee;
 }
 
 entity Department : cuid {
-  Department : String;
+  department : String;
 }
 
 entity Position {
-  key Level        : String;
-      PositionName : String;
+  key level        : String;
+      positionName : String;
 
 }
 
 entity LeaveRequest : cuid {
-  EmployeeID : Association to Employee;
-  LeaveType  : String;
-  StartDate  : Date;
-  EndDate    : Date;
-  Status     : String;
+  leaveType : String;
+  startDate : Date;
+  endDate   : Date;
+  status    : String;
+  employee  : Association to Employee;
 }
 
 entity Attendance : cuid {
-  EmployeeID   : String;
-  Date         : Date;
-  ClockInTime  : Time;
-  ClockOutTime : Time;
+  date         : Date;
+  clockInTime  : Time;
+  clockOutTime : Time;
+  employee     : Association to Employee;
 }
 
 entity Payroll : cuid {
-  EmployeeID  : String;
-  Month       : String;
-  Year        : String;
-  BasicSalary : Decimal(10, 2);
-  Deductions  : Decimal(10, 2);
-  NetSalary   : Decimal(10, 2);
+  month       : String;
+  year        : String;
+  basicSalary : Decimal(10, 2);
+  deductions  : Decimal(10, 2);
+  netSalary   : Decimal(10, 2);
+  employee    : Association to Employee;
 }
 
-entity UAN {
-  key UANNumber : String;
-}
 
 entity Bankdetails : cuid {
   AccountNumber : Integer;
   IIFSCCode     : String;
   BranchName    : String;
   BankName      : String;
+  employee      : Association to Employee;
+}
+
+entity Resignation : cuid {
+  resignDate      : Date;
+  noticePeriod    : Integer;
+  lastWorkingDate : Date;
+}
+
+entity Document : cuid {
+  documentName : String;
+  documentID   : String;
+  employee     : Association to Employee;
 }
