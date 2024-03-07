@@ -50,10 +50,11 @@ entity Address : cuid {
 
 entity Department : cuid {
   department : String;
+  description: String;
 }
 
-entity Position {
-  key level        : String;
+entity Position: cuid {
+      level        : String;
       positionName : String;
 
 }
