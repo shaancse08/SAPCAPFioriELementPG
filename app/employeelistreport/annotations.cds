@@ -62,6 +62,7 @@ annotate service.Employee with {
             },
         ],
     }
+    @Common.ValueListWithFixedValues: true // This one Will make Value Help to Drop down
 };
 
 annotate service.Employee with {
