@@ -24,7 +24,10 @@
       "auth": "xsuaa",
       "[production]": {
         "db": "hana"
-      }
+      },
+      "[development]": {
+        "db": "sqlite"
+      }      
     }
   }
 }
