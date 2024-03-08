@@ -63,7 +63,8 @@
         "sap.m": {},
         "sap.ui.core": {},
         "sap.ushell": {},
-        "sap.fe.templates": {}
+        "sap.fe.templates": {},
+        "sap.f": {}
       }
     },
     "contentDensities": {
@@ -96,22 +97,37 @@
       "css": []
     },
     "routing": {
-      "config": {},
+      "config": {
+        "flexibleColumnLayout": {
+          "defaultTwoColumnLayoutType": "TwoColumnsBeginExpanded",
+          "defaultThreeColumnLayoutType": "ThreeColumnsMidExpanded"
+        },
+        "routerClass": "sap.f.routing.Router"
+      },
       "routes": [
         {
           "pattern": ":?query:",
           "name": "EmployeeList",
-          "target": "EmployeeList"
+          "target": [
+            "EmployeeList"
+          ]
         },
         {
           "pattern": "Employee({key}):?query:",
           "name": "EmployeeObjectPage",
-          "target": "EmployeeObjectPage"
+          "target": [
+            "EmployeeList",
+            "EmployeeObjectPage"
+          ]
         },
         {
           "pattern": "Employee({key})/address({key2}):?query:",
           "name": "AddressObjectPage",
-          "target": "AddressObjectPage"
+          "target": [
+            "EmployeeList",
+            "EmployeeObjectPage",
+            "AddressObjectPage"
+          ]
         }
       ],
       "targets": {
@@ -132,7 +148,9 @@
               },
               "initialLoad": true
             }
-          }
+          },
+          "controlAggregation": "beginColumnPages",
+          "contextPattern": ""
         },
         "EmployeeObjectPage": {
           "type": "Component",
@@ -150,7 +168,9 @@
                 }
               }
             }
-          }
+          },
+          "controlAggregation": "midColumnPages",
+          "contextPattern": "/Employee({key})"
         },
         "AddressObjectPage": {
           "type": "Component",
@@ -161,9 +181,17 @@
               "editableHeaderContent": false,
               "contextPath": "/Employee/address"
             }
-          }
+          },
+          "controlAggregation": "endColumnPages",
+          "contextPattern": "/Employee({key})/address({key2})"
         }
       }
+    },
+    "rootView": {
+      "viewName": "sap.fe.templates.RootContainer.view.Fcl",
+      "type": "XML",
+      "async": true,
+      "id": "appRootView"
     }
   },
   "sap.fiori": {
