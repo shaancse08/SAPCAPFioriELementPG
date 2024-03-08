@@ -155,19 +155,6 @@
           },
           "controlAggregation": "midColumnPages",
           "contextPattern": "/Employee({key})"
-        },
-        "AddressObjectPage": {
-          "type": "Component",
-          "id": "AddressObjectPage",
-          "name": "sap.fe.templates.ObjectPage",
-          "options": {
-            "settings": {
-              "editableHeaderContent": false,
-              "contextPath": "/Employee/address"
-            }
-          },
-          "controlAggregation": "endColumnPages",
-          "contextPattern": "/Employee({key})/address({key2})"
         }
       }
     },
