@@ -129,7 +129,8 @@
                     "route": "EmployeeObjectPage"
                   }
                 }
-              }
+              },
+              "initialLoad": true
             }
           }
         },
