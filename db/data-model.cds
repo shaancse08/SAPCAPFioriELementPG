@@ -85,7 +85,7 @@ entity Payroll : cuid {
 
 
 entity Bankdetails : cuid {
-  AccountNumber : Integer;
+  AccountNumber : Integer64;
   IIFSCCode     : String;
   BranchName    : String;
   BankName      : String;
