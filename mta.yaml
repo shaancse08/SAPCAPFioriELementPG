@@ -3,96 +3,135 @@ ID: SAP-CAP-PG-FIORIELEMENT
 description: A simple CAP project.
 version: 1.0.0
 modules:
-    # Service Module
-  - name: SAP-CAP-PG-FIORIELEMENT-srv
-    type: nodejs
-    path: gen/srv
-    requires:
-      - name: SAP-CAP-PG-FIORIELEMENT-auth
-      - name: SAP-CAP-PG-FIORIELEMENT-db
-    provides:
-      - name: srv-api
-        properties:
-          srv-url: ${default-url}
+- name: SAP-CAP-PG-FIORIELEMENT-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: SAP-CAP-PG-FIORIELEMENT-auth
+  - name: SAP-CAP-PG-FIORIELEMENT-db
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+  build-parameters:
+    builder: npm
+- name: SAP-CAP-PG-FIORIELEMENT-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: SAP-CAP-PG-FIORIELEMENT-destination-service
     parameters:
-      buildpack: nodejs_buildpack
-    build-parameters:
-      builder: npm
-
-  - name: SAP-CAP-PG-FIORIELEMENT-destination-content
-    type: com.sap.application.content
-    requires:
-      - name: SAP-CAP-PG-FIORIELEMENT-destination-service
-        parameters:
-          content-target: true
-      - name: SAP-CAP-PG-FIORIELEMENT_html_repo_host
-        parameters:
-          service-key:
-            name: SAP-CAP-PG-FIORIELEMENT_html_repo_host-key
-      - name: SAP-CAP-PG-FIORIELEMENT-auth
-        parameters:
-          service-key:
-            name: SAP-CAP-PG-FIORIELEMENT-auth-key
+      content-target: true
+  - name: SAP-CAP-PG-FIORIELEMENT_html_repo_host
     parameters:
-      content:
+      service-key:
+        name: SAP-CAP-PG-FIORIELEMENT_html_repo_host-key
+  - name: SAP-CAP-PG-FIORIELEMENT-auth
+    parameters:
+      service-key:
+        name: SAP-CAP-PG-FIORIELEMENT-auth-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: hrms_service_SAP_CAP_PG_FIORIELEMENT_html_repo_host
+          ServiceInstanceName: SAP-CAP-PG-FIORIELEMENT-html5-app-host-service
+          ServiceKeyName: SAP-CAP-PG-FIORIELEMENT_html_repo_host-key
+          sap.cloud.service: hrms.service
+        - Authentication: OAuth2UserTokenExchange
+          Name: hrms_service_SAP_CAP_PG_FIORIELEMENT_auth
+          ServiceInstanceName: SAP-CAP-PG-FIORIELEMENT-auth
+          ServiceKeyName: SAP-CAP-PG-FIORIELEMENT-auth-key
+          sap.cloud.service: hrms.service
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: SAP-CAP-PG-FIORIELEMENT-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: SAP-CAP-PG-FIORIELEMENT-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: SAP-CAP-PG-FIORIELEMENT-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: SAP-CAP-PG-FIORIELEMENT_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - comappemployeelistreport.zip
+      name: comappemployeelistreport
+      target-path: resources/
+- name: comappemployeelistreport
+  type: html5
+  path: app/employeelistreport
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: SAP-CAP-PG-FIORIELEMENT-auth
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      tenant-mode: dedicated
+      xsappname: SAP-CAP-PG-FIORIELEMENT-${org}-${space}
+    path: ./xs-security.json
+    service: xsuaa
+    service-plan: application
+- name: SAP-CAP-PG-FIORIELEMENT-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
         instance:
           destinations:
-            - Name: hrms_service_SAP_CAP_PG_FIORIELEMENT_html_repo_host
-              ServiceInstanceName: SAP-CAP-PG-FIORIELEMENT-html5-app-host-service
-              ServiceKeyName: SAP-CAP-PG-FIORIELEMENT_html_repo_host-key
-              sap.cloud.service: hrms.service
-            - Authentication: OAuth2UserTokenExchange
-              Name: hrms_service_SAP_CAP_PG_FIORIELEMENT_auth
-              ServiceInstanceName: SAP-CAP-PG-FIORIELEMENT-auth
-              ServiceKeyName: SAP-CAP-PG-FIORIELEMENT-auth-key
-              sap.cloud.service: hrms.service
-          existing_destinations_policy: ignore
-    build-parameters:
-      no-source: true
-
-  - name: SAP-CAP-PG-FIORIELEMENT-db-deployer
-    type: hdb
-    path: gen/db
-    parameters:
-      buildpack: nodejs_buildpack
-    requires:
-      - name: SAP-CAP-PG-FIORIELEMENT-db
-resources:
-  - name: SAP-CAP-PG-FIORIELEMENT-auth
-    type: org.cloudfoundry.managed-service
-    parameters:
-      config:
-        tenant-mode: dedicated
-        xsappname: SAP-CAP-PG-FIORIELEMENT-${org}-${space}
-      path: ./xs-security.json
-      service: xsuaa
-      service-plan: application
-
-  - name: SAP-CAP-PG-FIORIELEMENT-destination-service
-    type: org.cloudfoundry.managed-service
-    parameters:
-      config:
-        HTML5Runtime_enabled: true
-        version: 1.0.0
-      service: destination
-      service-name: SAP-CAP-PG-FIORIELEMENT-destination-service
-      service-plan: lite
-  - name: SAP-CAP-PG-FIORIELEMENT_html_repo_host
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-name: SAP-CAP-PG-FIORIELEMENT-html5-app-host-service
-      service-plan: app-host
-  - name: SAP-CAP-PG-FIORIELEMENT-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          - Authentication: NoAuthentication
+            HTML5.DynamicDestination: true
+            HTML5.ForwardAuthToken: true
+            Name: SAP-CAP-PG-FIORIELEMENT-srv-api
+            ProxyType: Internet
+            Type: HTTP
+            URL: ~{srv-api/srv-url}
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: SAP-CAP-PG-FIORIELEMENT-destination-service
+    service-plan: lite
+  requires:
+  - name: srv-api
+- name: SAP-CAP-PG-FIORIELEMENT_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: SAP-CAP-PG-FIORIELEMENT-html5-app-host-service
+    service-plan: app-host
+- name: SAP-CAP-PG-FIORIELEMENT-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
 parameters:
+  deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-    - builder: custom
-      commands:
-        - npm install
-        - npx cds build --production
+  - builder: custom
+    commands:
+    - npm install
+    - npx cds build --production
