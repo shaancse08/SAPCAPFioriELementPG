@@ -119,15 +119,6 @@
             "EmployeeList",
             "EmployeeObjectPage"
           ]
-        },
-        {
-          "pattern": "Employee({key})/address({key2}):?query:",
-          "name": "AddressObjectPage",
-          "target": [
-            "EmployeeList",
-            "EmployeeObjectPage",
-            "AddressObjectPage"
-          ]
         }
       ],
       "targets": {
@@ -159,31 +150,11 @@
           "options": {
             "settings": {
               "editableHeaderContent": false,
-              "contextPath": "/Employee",
-              "navigation": {
-                "address": {
-                  "detail": {
-                    "route": "AddressObjectPage"
-                  }
-                }
-              }
+              "contextPath": "/Employee"
             }
           },
           "controlAggregation": "midColumnPages",
           "contextPattern": "/Employee({key})"
-        },
-        "AddressObjectPage": {
-          "type": "Component",
-          "id": "AddressObjectPage",
-          "name": "sap.fe.templates.ObjectPage",
-          "options": {
-            "settings": {
-              "editableHeaderContent": false,
-              "contextPath": "/Employee/address"
-            }
-          },
-          "controlAggregation": "endColumnPages",
-          "contextPattern": "/Employee({key})/address({key2})"
         }
       }
     },
