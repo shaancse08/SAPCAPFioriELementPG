@@ -19,7 +19,7 @@ entity Employee : cuid {
   };
   contactNumber    : types.phone;
   email            : types.email;
-  UAN              : Integer;
+  UAN              : String;
   AAdhar           : String;
   PAN              : String;
   emergencyContact : String;
