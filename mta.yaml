@@ -3,12 +3,13 @@ ID: SAP-CAP-PG-FIORIELEMENT
 description: A simple CAP project.
 version: 1.0.0
 modules:
+    # Service Module
   - name: SAP-CAP-PG-FIORIELEMENT-srv
     type: nodejs
     path: gen/srv
     requires:
       - name: SAP-CAP-PG-FIORIELEMENT-auth
-      - name: SAP-CAP-PG-FIORIELEMENT-postgres
+      - name: SAP-CAP-PG-FIORIELEMENT-db
     provides:
       - name: srv-api
         properties:
@@ -17,18 +18,7 @@ modules:
       buildpack: nodejs_buildpack
     build-parameters:
       builder: npm
-  - name: SAP-CAP-PG-FIORIELEMENT-postgres-deployer
-    type: nodejs
-    path: gen/pg
-    requires:
-      - name: SAP-CAP-PG-FIORIELEMENT-postgres
-    parameters:
-      buildpack: nodejs_buildpack
-      no-route: true
-      no-start: true
-      tasks:
-        - command: npm start
-          name: deploy-to-postgresql
+
   - name: SAP-CAP-PG-FIORIELEMENT-destination-content
     type: com.sap.application.content
     requires:
@@ -59,6 +49,14 @@ modules:
           existing_destinations_policy: ignore
     build-parameters:
       no-source: true
+
+  - name: SAP-CAP-PG-FIORIELEMENT-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: SAP-CAP-PG-FIORIELEMENT-db
 resources:
   - name: SAP-CAP-PG-FIORIELEMENT-auth
     type: org.cloudfoundry.managed-service
@@ -69,11 +67,7 @@ resources:
       path: ./xs-security.json
       service: xsuaa
       service-plan: application
-  - name: SAP-CAP-PG-FIORIELEMENT-postgres
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: postgresql-db
-      service-plan: trial
+
   - name: SAP-CAP-PG-FIORIELEMENT-destination-service
     type: org.cloudfoundry.managed-service
     parameters:
@@ -89,6 +83,11 @@ resources:
       service: html5-apps-repo
       service-name: SAP-CAP-PG-FIORIELEMENT-html5-app-host-service
       service-plan: app-host
+  - name: SAP-CAP-PG-FIORIELEMENT-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
 parameters:
   enable-parallel-deployments: true
 build-parameters:
@@ -97,4 +96,3 @@ build-parameters:
       commands:
         - npm install
         - npx cds build --production
-        - bash ./pg-build.sh
