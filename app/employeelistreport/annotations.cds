@@ -72,7 +72,19 @@ annotate service.Employee with @(UI: {
             }
         ]
     },
-
+    HeaderInfo                 : {
+        $Type         : 'UI.HeaderInfoType',
+        TypeName      : 'Employee',
+        TypeNamePlural: 'Employees',
+        Title         : {Value: {$edmJson: {
+            $Apply   : [
+                {$Path: 'firstName'},
+                ' ',
+                {$Path: 'lastName'}
+            ],
+            $Function: 'odata.concat',
+        }, }, },
+    },
 });
 
 /**
