@@ -1,15 +1,15 @@
 using HRMSService as service from '../../srv/hrmsSystem';
 
 annotate service.Employee with @(UI: {
-    SelectionFields: [
+    SelectionFields            : [
         email,
         firstName,
         lastName,
         department_ID
     ],
-    LineItem       : [
+    LineItem                   : [
         {
-            $Type: 'UI.DataField',         
+            $Type: 'UI.DataField',
             Value: firstName,
         },
         {
@@ -36,14 +36,50 @@ annotate service.Employee with @(UI: {
             $Type: 'UI.DataField',
             Value: department.department
         }
-    ]
+    ],
+    FieldGroup #departmentGroup: {
+        $Type: 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type: 'UI.DataField',
+                Value: department_ID
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: department.department
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: department.description
+            }
+        ]
+    },
+
+    FieldGroup #position       : {
+        $Type: 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type: 'UI.DataField',
+                Value: position_ID
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: position.level
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: position.positionName
+            }
+        ]
+    },
+
 });
 
 /**
  * This is to show the Value Help
  */
 annotate service.Employee with {
-    department @Common.ValueList: {
+    department @Common.ValueList               : {
         $Type         : 'Common.ValueListType',
         CollectionPath: 'Department',
         Parameters    : [
@@ -62,11 +98,11 @@ annotate service.Employee with {
             },
         ],
     }
-    @Common.ValueListWithFixedValues: true // This one Will make Value Help to Drop down
+               @Common.ValueListWithFixedValues: true // This one Will make Value Help to Drop down
 };
 
 annotate service.Employee with {
-    position @Common.ValueList: {
+    position @Common.ValueList               : {
         $Type         : 'Common.ValueListType',
         CollectionPath: 'Position',
         Parameters    : [
@@ -85,6 +121,7 @@ annotate service.Employee with {
             },
         ],
     }
+             @Common.ValueListWithFixedValues: true
 };
 
 annotate service.Employee with {
@@ -112,36 +149,6 @@ annotate service.Employee with {
         ],
     }
 };
-
-annotate service.Department with @(UI.FieldGroup #departmentGroup: {
-    $Type: 'UI.FieldGroupType',
-    Data : [
-        {
-            $Type: 'UI.DataField',
-            Value: department
-        },
-        {
-            $Type: 'UI.DataField',
-            Value: description
-        }
-    ]
-});
-
-
-annotate service.Position with @(UI: {FieldGroup #position: {
-    $Type: 'UI.FieldGroupType',
-    Data : [
-        {
-            $Type: 'UI.DataField',
-            Value: level
-        },
-        {
-            $Type: 'UI.DataField',
-            Value: positionName
-        }
-
-    ]
-}, });
 
 annotate service.Address with @(UI: {LineItem #addressLineItem: [
     {
@@ -235,27 +242,27 @@ annotate service.Employee with @(
             Target: '@UI.FieldGroup#GeneratedGroup1',
         },
         {
-            $Type: 'UI.ReferenceFacet',
-            Label: '{@i18n>Address}',
-            ID: 'AddressLineItem',
+            $Type : 'UI.ReferenceFacet',
+            Label : '{@i18n>Address}',
+            ID    : 'AddressLineItem',
             Target: 'address/@UI.LineItem#addressLineItem'
         },
         {
             $Type : 'UI.ReferenceFacet',
             ID    : 'DepartmentField',
             Label : '{@i18n>DepartmentSection}',
-            Target: 'department/@UI.FieldGroup#departmentGroup'
+            Target: '@UI.FieldGroup#departmentGroup'
         },
         {
             $Type : 'UI.ReferenceFacet',
             ID    : 'Position',
             Label : '{@i18n>Position}',
-            Target: 'position/@UI.FieldGroup#position'
+            Target: '@UI.FieldGroup#position'
         },
         {
-            $Type: 'UI.ReferenceFacet',
-            Label: '{@i18n>BankDetails}',
-            ID: 'BankDetailsFacet',
+            $Type : 'UI.ReferenceFacet',
+            Label : '{@i18n>BankDetails}',
+            ID    : 'BankDetailsFacet',
             Target: 'bankDetail/@UI.LineItem#bankLineItem'
         }
     ]

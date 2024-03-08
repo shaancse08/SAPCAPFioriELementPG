@@ -6,4 +6,7 @@ annotate HRMSService.Department with {
 };
 
 
-
+annotate HRMSService.Department with {
+    department  @readonly;
+    description @readonly;
+};

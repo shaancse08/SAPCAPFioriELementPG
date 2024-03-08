@@ -5,4 +5,7 @@ annotate HRMSService.Position with {
     positionName @title: '{i18n>PositionName}';
 };
 
-
+annotate HRMSService.Position with {
+    level        @readonly;
+    positionName @readonly;
+};
