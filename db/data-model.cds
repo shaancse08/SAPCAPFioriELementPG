@@ -20,7 +20,7 @@ entity Employee : cuid {
   contactNumber    : types.phone;
   email            : types.email;
   UAN              : Integer;
-  AAdhar           : Integer;
+  AAdhar           : String;
   PAN              : String;
   emergencyContact : String;
   address          : Composition of many Address
