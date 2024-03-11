@@ -21,6 +21,7 @@
     "cds": true
   },
   "rules": {
+    "no-debugger": 1,
     "no-console": "off",
     "require-atomic-updates": "off",
     "require-await": "warn",
