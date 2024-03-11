@@ -1,6 +1,7 @@
 {
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended", "plugin:@sap/cds/recommended"],
   "env": {
+    "browser": true,
     "es2022": true,
     "node": true,
     "jest": true,
@@ -21,6 +22,8 @@
   },
   "rules": {
     "no-console": "off",
-    "require-atomic-updates": "off"
+    "require-atomic-updates": "off",
+    "require-await": "warn",
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "_" }]
   }
 }
