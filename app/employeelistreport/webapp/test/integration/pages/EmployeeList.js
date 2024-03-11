@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 sap.ui.define(['sap/fe/test/ListReport'], function(ListReport) {
     'use strict';
 
