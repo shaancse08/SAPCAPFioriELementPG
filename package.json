@@ -9,6 +9,7 @@
         "@cap-js/postgres": "^1",
         "@sap/cds": "^7",
         "@sap/cds-hana": "^2",
+        "@sap/cds-odata-v2-adapter-proxy": "^1.9.21",
         "@sap/xssec": "^3",
         "express": "^4"
     },
@@ -27,7 +28,8 @@
         "build": "rimraf resources mta_archives && mbt build --mtar archive",
         "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
         "watch-employeeworklistreport": "cds watch --open employeeworklistreport/webapp/index.html?sap-ui-xx-viewCache=false",
-        "test": "eslint . --ext '.js, .cds, .csn'"
+        "test": "eslint . --ext '.js, .cds, .csn'",
+        "watch-employeeoverview": "cds watch --open employeeoverview/webapp/index.html?sap-ui-xx-viewCache=false"
     },
     "cds": {
         "requires": {
@@ -42,6 +44,7 @@
     },
     "sapux": [
         "app/employeelistreport",
-        "app/employeeworklistreport"
+        "app/employeeworklistreport",
+        "app/employeeoverview"
     ]
 }

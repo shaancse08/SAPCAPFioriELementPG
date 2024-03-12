@@ -6,16 +6,39 @@
     {
       "name": "uaa.user",
       "description": "UAA"
+    },
+    {
+      "name": "$XSAPPNAME.Display",
+      "description": "Scope For Display"
+    },
+    {
+      "name": "$XSAPPNAME.Create",
+      "description": "Scope For Create"
+    },
+    {
+      "name": "$XSAPPNAME.Delete",
+      "description": "Scope For Delete"
     }
   ],
   "role-templates": [
     {
       "name": "Token_Exchange",
       "description": "UAA",
-      "scope-references": [
-        "uaa.user"
-      ]
+      "scope-references": ["uaa.user"]
+    },
+    {
+      "name": "Viewer",
+      "description": "Role To View The Application",
+      "default-role-name": "Viewer: Authorized to Read All Employees",
+      "scope-references": ["$XSAPPNAME.Display"]
     }
   ],
-  "attributes": []
+  "attributes": [],
+  "role-collections": [
+    {
+      "name": "RC HRMS Viewer",
+      "description": "Can view the HRMS system",
+      "role-template-references": ["$XSAPPNAME.Viewer"]
+    }
+  ]
 }
